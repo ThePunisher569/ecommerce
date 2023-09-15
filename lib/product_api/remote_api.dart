@@ -1,9 +1,4 @@
-import 'dart:convert';
-
-import 'package:http/http.dart' as http;
-
 import '../model/product.dart';
-import '../utils/constants.dart';
 import 'product_repo.dart';
 
 class ProductApi extends ProductRepo {
@@ -45,9 +40,5 @@ class ProductApi extends ProductRepo {
     //   logger.e('Error fetching Product data: $e');
     //   throw Exception('Error fetching Product data');
     // }
-  }
-
-  Future<void> saveProducts(Product product) async {
-    //TODO save product in db which are fetched from api
   }
 }

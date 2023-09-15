@@ -1,24 +1,33 @@
-import 'package:json_annotation/json_annotation.dart';
-
-part 'product.g.dart';
-
-@JsonSerializable(
-  createFactory: true,
-)
 class Product {
+  int? id;
   final String prodImage, prodId, prodName, prodPrice;
 
-  Product(
-      {required this.prodImage,
-      required this.prodId,
-      required this.prodName,
-      required this.prodPrice});
-
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
+  Product({
+    this.id,
+    required this.prodImage,
+    required this.prodId,
+    required this.prodName,
+    required this.prodPrice,
+  });
 
   @override
   String toString() {
-    return 'Product{prodImage: $prodImage, prodId: $prodId, prodName: $prodName, prodPrice: $prodPrice}';
+    return 'Product{id: $id, prodImage: $prodImage, prodId: $prodId, prodName: $prodName, prodPrice: $prodPrice}';
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'prodImage': prodImage,
+      'prodId': prodId,
+      'prodName': prodName,
+      'prodPrice': prodPrice,
+    };
+  }
+
+  Product.fromMap(Map<String, dynamic> map)
+      : id = map['id'],
+        prodImage = map['prodImage'].toString(),
+        prodId = map['prodId'].toString(),
+        prodName = map['prodName'].toString(),
+        prodPrice = map['prodPrice'].toString();
 }
