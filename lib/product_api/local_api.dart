@@ -79,6 +79,15 @@ class LocalApi extends ProductRepo {
     return cartProducts.map((e) => Product.fromMap(e)).toList();
   }
 
+  Future<Product> getProductFromCart(String prodId) async {
+    final product = await database.query(
+      DbConstants.cartTable,
+      where: 'prodId = ?',
+      whereArgs: [prodId],
+    );
+    return Product.fromMap(product[0]);
+  }
+
   Future<void> saveToCart(Product product) async {
     print('Adding product to cart....');
     await database.insert(DbConstants.cartTable, product.toMap());
@@ -101,7 +110,7 @@ class LocalApi extends ProductRepo {
     print('Cart truncated!');
   }
 
-  // Remark method
+  // Remark methods
 
   Future<void> saveRemark(String remark) async {
     print('Adding remark: $remark');

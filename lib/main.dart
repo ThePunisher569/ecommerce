@@ -1,41 +1,27 @@
 import 'package:ecommerce/product_api/local_api.dart';
+import 'package:ecommerce/product_api/remote_api.dart';
 import 'package:flutter/material.dart';
 
-import 'model/product.dart';
 import 'utils/constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //runApp(const MyApp());
+
+  final remoteApi = RemoteApi();
+
   final api = LocalApi();
   await api.initDatabase();
 
-  final product1 = Product(
-    prodImage: 'abfahjgba',
-    prodId: '1',
-    prodName: 'DB LCD Temp',
-    prodPrice: '12424',
-  );
+  await api.saveAllProducts(await remoteApi.getAllProducts());
+  logger.d(await api.getAllProducts());
 
-  final product2 = Product(
-    prodImage: 'agtoewjtwjo',
-    prodId: '2',
-    prodName: 'DB afnak Temp',
-    prodPrice: '35982759',
-  );
+  await api.saveToCart(await api.getProduct('1'));
 
-  await api.saveAllProducts([product1, product2]);
+  print('cart item: ');
+  logger.d(await api.getProductFromCart('1'));
 
-  final productList = await api.getAllProducts();
-  print('product list: ');
-  logger.d(productList);
-
-  await api.saveToCart(product1);
-
-  print('cart list: ');
-  logger.d(await api.getAllProductsFromCart());
-
-  await api.removeFromCart(product1);
+  await api.removeFromCart(await api.getProduct('1'));
 
   logger.d(await api.getAllProductsFromCart());
 
