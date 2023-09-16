@@ -33,6 +33,7 @@ class LocalApi extends ProductRepo {
         print('Creating table....');
         await db.execute(DbConstants.createProductQuery);
         await db.execute(DbConstants.createCartQuery);
+        await db.execute(DbConstants.createRemarkQuery);
         print('Table created!');
       },
     );
@@ -73,19 +74,47 @@ class LocalApi extends ProductRepo {
   // Cart table methods
 
   Future<List<Product>> getAllProductsFromCart() async {
-    // TODO: implement getCartProducts
-    throw UnimplementedError();
+    final cartProducts = await database.query(DbConstants.cartTable);
+
+    return cartProducts.map((e) => Product.fromMap(e)).toList();
   }
 
-  Future<void> addToCart(Product product) async {
-    // TODO: implement addToCart
+  Future<void> saveToCart(Product product) async {
+    print('Adding product to cart....');
+    await database.insert(DbConstants.cartTable, product.toMap());
+    print('Product added successfully!');
   }
 
   Future<void> removeFromCart(Product product) async {
-    // TODO: implement removeFromCart
+    print('Deleting product from cart....');
+    await database.delete(
+      DbConstants.cartTable,
+      where: 'prodId = ?',
+      whereArgs: [product.prodId],
+    );
+    print('Product Removed from cart....');
   }
 
   Future<void> emptyCart() async {
-    // TODO: implement emptyCart
+    print('Truncating cart....');
+    await database.execute(DbConstants.emptyCartQuery);
+    print('Cart truncated!');
+  }
+
+  // Remark method
+
+  Future<void> saveRemark(String remark) async {
+    print('Adding remark: $remark');
+
+    final map = {'remark': remark};
+    await database.insert(DbConstants.remarksTable, map);
+
+    print('remark added!');
+  }
+
+  Future<List<Map<String, dynamic>>> getRemarks() async {
+    final remarks = await database.query(DbConstants.remarksTable);
+
+    return remarks;
   }
 }
