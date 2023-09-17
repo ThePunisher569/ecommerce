@@ -1,14 +1,12 @@
-import 'package:ecommerce/product_api/local_api.dart';
-import 'package:ecommerce/product_api/remote_api.dart';
 import 'package:flutter/material.dart';
 
-import 'utils/constants.dart';
+import 'ui/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //runApp(const MyApp());
+  runApp(const MyApp());
 
-  final remoteApi = RemoteApi();
+  /*final remoteApi = RemoteApi();
 
   final api = LocalApi();
   await api.initDatabase();
@@ -27,7 +25,7 @@ void main() async {
 
   await api.saveRemark('This is a remark 1');
   logger.d(await api.getRemarks());
-  await api.close();
+  await api.close();*/
 }
 
 class MyApp extends StatelessWidget {
@@ -36,12 +34,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ECommerce',
+      title: 'E-Commerce',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Scaffold(),
+      home: const Home(),
     );
   }
 }
