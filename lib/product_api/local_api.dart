@@ -22,10 +22,6 @@ class LocalApi extends ProductRepo {
   Future<void> initDatabase() async {
     String path = join(await getDatabasesPath(), DbConstants.dbName);
 
-    print('Deleting db....');
-    await deleteDatabase(path);
-    print('DB Deleted!');
-
     database = await openDatabase(
       path,
       version: 1,
@@ -90,7 +86,8 @@ class LocalApi extends ProductRepo {
 
   Future<void> saveToCart(Product product) async {
     print('Adding product to cart....');
-    await database.insert(DbConstants.cartTable, product.toMap());
+    await database.insert(
+        DbConstants.cartTable, product.toMap()..addAll({'id': product.id}));
     print('Product added successfully!');
   }
 

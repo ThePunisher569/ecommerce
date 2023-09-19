@@ -1,6 +1,10 @@
+import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../bloc/cart_bloc.dart';
+import '../bloc/products_bloc.dart';
 import 'product_list.dart';
 import 'remark_widget.dart';
 
@@ -28,7 +32,19 @@ class StoreWidget extends StatelessWidget {
 
                   if (!context.mounted) return;
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProductList(storeId: storeId),
+                    builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (BuildContext context) => ProductsBloc(),
+                        ),
+                        BlocProvider(
+                          create: (BuildContext context) => CartBloc(),
+                        )
+                      ],
+                      child: ProductList(
+                        storeId: storeId,
+                      ),
+                    ),
                   ));
                 },
                 child: const Text('Check In'),
@@ -41,10 +57,8 @@ class StoreWidget extends StatelessWidget {
                   );
 
                   if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Remark Added!'),
-                    behavior: SnackBarBehavior.floating,
-                  ));
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(Constants.getSnackBar('Remark Added!'));
                 },
                 child: const Text('Remark'),
               ),

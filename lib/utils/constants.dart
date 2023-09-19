@@ -15,6 +15,18 @@ class Constants {
     SizedBox(height: 16),
     StoreWidget(storeId: 3)
   ];
+
+  static SnackBar getSnackBar(String text) {
+    return SnackBar(
+      content: Text(text),
+      behavior: SnackBarBehavior.floating,
+    );
+  }
+
+  static AppBar appBar = AppBar(
+    title: const Text('E-Commerce'),
+    centerTitle: true,
+  );
 }
 
 final logger = Logger();

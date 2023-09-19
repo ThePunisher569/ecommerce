@@ -1,3 +1,4 @@
+import 'package:ecommerce/product_api/local_api.dart';
 import 'package:flutter/material.dart';
 
 class RemarkWidget extends StatefulWidget {
@@ -36,10 +37,16 @@ class _RemarkWidgetState extends State<RemarkWidget> {
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               String inputText = _textEditingController.text;
-              print('Input Text: $inputText');
-              Navigator.pop(context);
+
+              if (inputText.isNotEmpty) {
+                await LocalApi().saveRemark(inputText);
+              }
+
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             },
             child: const Text('Submit'),
           ),

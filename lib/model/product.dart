@@ -1,8 +1,10 @@
-class Product {
-  int? id;
+import 'package:equatable/equatable.dart';
+
+class Product extends Equatable {
+  final int? id;
   final String prodImage, prodId, prodName, prodPrice;
 
-  Product({
+  const Product({
     this.id,
     required this.prodImage,
     required this.prodId,
@@ -30,4 +32,7 @@ class Product {
         prodId = map['prodId'].toString(),
         prodName = map['prodName'].toString(),
         prodPrice = map['prodPrice'].toString();
+
+  @override
+  List<Object?> get props => [prodId, prodName, prodPrice];
 }

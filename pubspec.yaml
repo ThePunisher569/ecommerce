@@ -35,7 +35,10 @@ dependencies:
   google_fonts:
   sqflite:
   shared_preferences:
+  cached_network_image:
   path:
+  equatable:
+  flutter_bloc:
   cupertino_icons: ^1.0.6
 
 dev_dependencies:
