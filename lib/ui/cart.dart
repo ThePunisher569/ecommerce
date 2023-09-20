@@ -1,7 +1,9 @@
 import 'package:ecommerce/bloc/cart_bloc.dart';
+import 'package:ecommerce/ui/home.dart';
 import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'product_item.dart';
 
@@ -40,14 +42,63 @@ class _CartState extends State<Cart> {
             } else {
               logger.d(state.products);
 
-              // TODO Add checkout method
+              return Column(
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: ListView.separated(
+                      itemCount: state.products.length,
+                      itemBuilder: (ctx, index) {
+                        final product = state.products[index];
+                        return ProductItem(product: product);
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const SizedBox(
+                        height: 16,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: ButtonBar(
+                      alignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            final cartBloc = context.read<CartBloc>();
 
-              return ListView.builder(
-                  itemCount: state.products.length,
-                  itemBuilder: (ctx, index) {
-                    final product = state.products[index];
-                    return ProductItem(product: product);
-                  });
+                            cartBloc.add(ClearCartEvent());
+                          },
+                          child: const Text('Clear Cart'),
+                        ),
+                        FilledButton(
+                          onPressed: () async {
+                            final cartBloc = context.read<CartBloc>();
+
+                            cartBloc.add(ClearCartEvent());
+
+                            final pref = await SharedPreferences.getInstance();
+                            pref.setInt('store_id', 0);
+
+                            if (!context.mounted) return;
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              Constants.getSnackBar('Checked Out from store!'),
+                            );
+
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Home()),
+                                ModalRoute.withName("/Home"));
+                          },
+                          child: const Text('Checkout'),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
             }
           }
 

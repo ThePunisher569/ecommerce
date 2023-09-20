@@ -3,6 +3,7 @@ import 'package:ecommerce/bloc/products_bloc.dart';
 import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'cart.dart';
 import 'product_item.dart';
@@ -34,7 +35,6 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO add checkout on will pop
     return BlocBuilder<CartBloc, CartState>(
       builder: (BuildContext context, CartState state) {
         final cartState = state as CartStateLoaded;
@@ -48,8 +48,10 @@ class _ProductListState extends State<ProductList> {
                 largeSize: 24,
                 label: Text('${cartState.products.length}'),
                 child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
+                  onPressed: () async {
+                    final bloc = context.read<CartBloc>();
+
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => BlocProvider(
                           create: (BuildContext context) => CartBloc(),
@@ -57,6 +59,8 @@ class _ProductListState extends State<ProductList> {
                         ),
                       ),
                     );
+
+                    bloc.add(LoadCartEvent());
                   },
                   icon: const Icon(Icons.shopping_cart),
                 ),
@@ -70,33 +74,78 @@ class _ProductListState extends State<ProductList> {
               ),
             ),
           ),
-          body: BlocBuilder<ProductsBloc, ProductsState>(
-            builder: (BuildContext context, ProductsState state) {
-              if (state is ProductsStateLoaded) {
-                if (state.products.isEmpty) {
-                  // product is loading
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.indigo,
-                    ),
-                  );
-                } else {
-                  logger.d(state.products);
+          body: WillPopScope(
+            onWillPop: popScope,
+            child: BlocBuilder<ProductsBloc, ProductsState>(
+              builder: (BuildContext context, ProductsState state) {
+                if (state is ProductsStateLoaded) {
+                  if (state.products.isEmpty) {
+                    // product is loading
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.indigo,
+                      ),
+                    );
+                  } else {
+                    logger.d(state.products);
 
-                  return ListView.builder(
+                    return ListView.separated(
                       itemCount: state.products.length,
                       itemBuilder: (ctx, index) {
                         final product = state.products[index];
                         return ProductItem(product: product);
-                      });
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const SizedBox(
+                        height: 16,
+                      ),
+                    );
+                  }
                 }
-              }
 
-              return Container();
-            },
+                return Container();
+              },
+            ),
           ),
         );
       },
     );
+  }
+
+  Future<bool> popScope() async {
+    final bloc = context.read<CartBloc>();
+
+    final shouldPop = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Checkout'),
+        content: const Text(
+            'You will be checked out from this store and all products from cart will be removed!'),
+        actions: [
+          OutlinedButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('No'),
+          ),
+          FilledButton(
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              prefs.setInt('store_id', 0);
+
+              bloc.add(ClearCartEvent());
+
+              if (!context.mounted) return;
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                Constants.getSnackBar('Checked Out from store!'),
+              );
+
+              Navigator.pop(context, true);
+            },
+            child: const Text('Yes'),
+          )
+        ],
+      ),
+    );
+    return shouldPop!;
   }
 }

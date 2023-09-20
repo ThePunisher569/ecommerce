@@ -37,8 +37,8 @@ class _ProductItemState extends State<ProductItem> {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.redAccent),
                   onPressed: () {
-                    cartBloc.add(RemoveFromCart(widget.product));
-                    setState(() {});
+                    cartBloc.add(RemoveFromCartEvent(widget.product));
+
                     ScaffoldMessenger.of(context).showSnackBar(
                         Constants.getSnackBar('Product Removed From Cart!'));
                   },
@@ -47,9 +47,8 @@ class _ProductItemState extends State<ProductItem> {
               : ElevatedButton.icon(
                   label: const Text('Add To Cart'),
                   onPressed: () {
-                    cartBloc.add(AddToCart(widget.product));
+                    cartBloc.add(AddToCartEvent(widget.product));
 
-                    setState(() {});
                     ScaffoldMessenger.of(context).showSnackBar(
                         Constants.getSnackBar('Product Added To Cart!'));
                   },
