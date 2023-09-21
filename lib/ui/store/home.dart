@@ -1,7 +1,7 @@
 import 'package:ecommerce/bloc/cart_bloc.dart';
 import 'package:ecommerce/bloc/products_bloc.dart';
 import 'package:ecommerce/product_api/local_api.dart';
-import 'package:ecommerce/ui/product_list.dart';
+import 'package:ecommerce/ui/product/product_list.dart';
 import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Constants.appBar,
+      appBar: Constants.appBar('Stores'),
       body: ListView(
         children: Constants.storeWidgetList,
       ),

@@ -1,11 +1,12 @@
-import 'package:ecommerce/bloc/cart_bloc.dart';
-import 'package:ecommerce/bloc/products_bloc.dart';
-import 'package:ecommerce/utils/constants.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'cart.dart';
+import '../../bloc/cart_bloc.dart';
+import '../../bloc/products_bloc.dart';
+import '../../utils/constants.dart';
+import '../cart.dart';
 import 'product_item.dart';
 
 class ProductList extends StatefulWidget {
@@ -18,8 +19,16 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
+  late String storeImage;
+
   @override
   void initState() {
+    storeImage = switch (widget.storeId) {
+      1 => Constants.storeOneImage,
+      2 => Constants.storeTwoImage,
+      _ => Constants.storeThreeImage,
+    };
+
     final bloc = context.read<ProductsBloc>();
 
     // Adding event to change product list state
@@ -41,7 +50,22 @@ class _ProductListState extends State<ProductList> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text(Constants.appName),
+            flexibleSpace: Container(
+              color: Colors.indigo.shade100,
+              child: CachedNetworkImage(
+                imageUrl: storeImage,
+                alignment: Alignment.center,
+                fit: BoxFit.contain,
+                useOldImageOnUrlChange: true,
+                filterQuality: FilterQuality.high,
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                errorWidget: (context, error, stackTrace) => const Center(
+                    child: Icon(Icons.broken_image,
+                        size: 48, color: Colors.white70)),
+              ),
+            ),
             centerTitle: true,
             actions: [
               Badge(
@@ -66,13 +90,6 @@ class _ProductListState extends State<ProductList> {
                 ),
               ),
             ],
-            bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(16),
-              child: Text(
-                'You are Checked In with store id ${widget.storeId}',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
           ),
           body: WillPopScope(
             onWillPop: popScope,
@@ -96,9 +113,7 @@ class _ProductListState extends State<ProductList> {
                         return ProductItem(product: product);
                       },
                       separatorBuilder: (BuildContext context, int index) =>
-                          const SizedBox(
-                        height: 16,
-                      ),
+                          Constants.gap16V,
                     );
                   }
                 }
@@ -122,7 +137,7 @@ class _ProductListState extends State<ProductList> {
         content: const Text(
             'You will be checked out from this store and all products from cart will be removed!'),
         actions: [
-          OutlinedButton(
+          TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: const Text('No'),
           ),

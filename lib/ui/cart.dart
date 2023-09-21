@@ -1,11 +1,11 @@
 import 'package:ecommerce/bloc/cart_bloc.dart';
-import 'package:ecommerce/ui/home.dart';
+import 'package:ecommerce/ui/store/home.dart';
 import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'product_item.dart';
+import 'product/product_item.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -27,7 +27,7 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: Constants.appBar,
+      appBar: Constants.appBar('Cart'),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (BuildContext context, CartState state) {
           if (state is CartStateLoaded) {
@@ -53,9 +53,7 @@ class _CartState extends State<Cart> {
                         return ProductItem(product: product);
                       },
                       separatorBuilder: (BuildContext context, int index) =>
-                          const SizedBox(
-                        height: 16,
-                      ),
+                          Constants.gap16V,
                     ),
                   ),
                   Flexible(
@@ -63,7 +61,7 @@ class _CartState extends State<Cart> {
                       alignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        OutlinedButton(
+                        TextButton(
                           onPressed: () {
                             final cartBloc = context.read<CartBloc>();
 

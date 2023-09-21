@@ -1,5 +1,7 @@
-import 'package:ecommerce/product_api/local_api.dart';
 import 'package:flutter/material.dart';
+
+import '../product_api/local_api.dart';
+import '../utils/constants.dart';
 
 class RemarkWidget extends StatefulWidget {
   final int storeId;
@@ -42,10 +44,11 @@ class _RemarkWidgetState extends State<RemarkWidget> {
 
               if (inputText.isNotEmpty) {
                 await LocalApi().saveRemark(inputText);
-              }
 
-              if (context.mounted) {
-                Navigator.pop(context);
+                if (!context.mounted) return;
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(Constants.getSnackBar('Remark Added!'));
               }
             },
             child: const Text('Submit'),
