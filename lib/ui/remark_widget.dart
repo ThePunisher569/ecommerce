@@ -26,7 +26,7 @@ class _RemarkWidgetState extends State<RemarkWidget> {
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
-        top: 16,
+        top: 24,
         left: 16,
         right: 16,
       ),
@@ -34,11 +34,16 @@ class _RemarkWidgetState extends State<RemarkWidget> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           TextField(
+            autofocus: true,
             controller: _textEditingController,
-            decoration: const InputDecoration(labelText: 'Enter remark'),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.feedback),
+              border: OutlineInputBorder(),
+              hintText: 'Enter Remark',
+            ),
           ),
           const SizedBox(height: 16.0),
-          ElevatedButton(
+          FilledButton(
             onPressed: () async {
               String inputText = _textEditingController.text;
 

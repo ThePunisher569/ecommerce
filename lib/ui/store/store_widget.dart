@@ -1,23 +1,31 @@
 import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../bloc/cart_bloc.dart';
-import '../../bloc/products_bloc.dart';
-import '../product/product_list.dart';
-import '../remark_widget.dart';
+import '../../model/store.dart';
+import '../../utils/constants.dart';
+import 'store_options_screen.dart';
 
 class StoreWidget extends StatelessWidget {
-  final int storeId;
+  final Store store;
 
-  final String name, image;
+  const StoreWidget({
+    super.key,
+    required this.store,
+  });
 
-  const StoreWidget(
-      {super.key,
-      required this.storeId,
-      required this.name,
-      required this.image});
+  void checkIntoStore(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('store_id', store.storeId);
+
+    print('prefs store_id set to ${store.storeId}');
+
+    if (!context.mounted) return;
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => StoreOptionsScreen(store: store),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,53 +34,18 @@ class StoreWidget extends StatelessWidget {
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.indigo.shade700,
-          title: Text(name),
-          trailing: ButtonBar(
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade400),
-                onPressed: () async {
-                  await showModalBottomSheet(
-                    context: context,
-                    builder: (context) => RemarkWidget(storeId: storeId),
-                  );
-                },
-                child: const Text('Add Remark'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.setInt('store_id', storeId);
-
-                  print('prefs store_id set to $storeId');
-
-                  if (!context.mounted) return;
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider(
-                          create: (BuildContext context) => ProductsBloc(),
-                        ),
-                        BlocProvider(
-                          create: (BuildContext context) => CartBloc(),
-                        )
-                      ],
-                      child: ProductList(
-                        storeId: storeId,
-                      ),
-                    ),
-                  ));
-                },
-                child: const Text('Check In'),
-              ),
-            ],
+          title: Text(store.storeName),
+          trailing: ElevatedButton(
+            onPressed: () => checkIntoStore(context),
+            child: const Text('Visit this store'),
           ),
         ),
         child: Card(
           color: Colors.indigo.shade200,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: CachedNetworkImage(
-            imageUrl: image,
+            imageUrl: store.storeImage,
             alignment: Alignment.center,
             fit: BoxFit.contain,
             useOldImageOnUrlChange: true,
@@ -84,6 +57,50 @@ class StoreWidget extends StatelessWidget {
                 child:
                     Icon(Icons.broken_image, size: 48, color: Colors.white70)),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// It will be used in store_options_screen.dart
+class StoreCard extends StatelessWidget {
+  final Store store;
+
+  const StoreCard({super.key, required this.store});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CachedNetworkImage(
+              width: MediaQuery.sizeOf(context).width * 0.5,
+              alignment: Alignment.centerLeft,
+              imageUrl: store.storeImage,
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.high,
+              placeholder: (context, url) => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              errorWidget: (context, error, stackTrace) => const Center(
+                  child: Icon(Icons.broken_image,
+                      size: 48, color: Colors.white70)),
+            ),
+            Constants.gap16H,
+            Column(
+              children: [
+                Text('Owner Name : ${store.ownerName}'),
+                Text('Mobile No. : ${store.mobile}'),
+                Text('City : ${store.city}'),
+                Text('State : ${store.state}'),
+                Text('Country : ${store.country}'),
+              ],
+            )
+          ],
         ),
       ),
     );

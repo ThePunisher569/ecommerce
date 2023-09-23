@@ -1,7 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/cart_bloc.dart';
 import '../../bloc/products_bloc.dart';
@@ -50,22 +48,7 @@ class _ProductListState extends State<ProductList> {
 
         return Scaffold(
           appBar: AppBar(
-            flexibleSpace: Container(
-              color: Colors.indigo.shade100,
-              child: CachedNetworkImage(
-                imageUrl: storeImage,
-                alignment: Alignment.center,
-                fit: BoxFit.contain,
-                useOldImageOnUrlChange: true,
-                filterQuality: FilterQuality.high,
-                placeholder: (context, url) => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                errorWidget: (context, error, stackTrace) => const Center(
-                    child: Icon(Icons.broken_image,
-                        size: 48, color: Colors.white70)),
-              ),
-            ),
+            title: const Text('Available Products'),
             centerTitle: true,
             actions: [
               Badge(
@@ -77,10 +60,7 @@ class _ProductListState extends State<ProductList> {
 
                     await Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => BlocProvider(
-                          create: (BuildContext context) => CartBloc(),
-                          child: const Cart(),
-                        ),
+                        builder: (context) => const Cart(),
                       ),
                     );
 
@@ -91,76 +71,36 @@ class _ProductListState extends State<ProductList> {
               ),
             ],
           ),
-          body: WillPopScope(
-            onWillPop: popScope,
-            child: BlocBuilder<ProductsBloc, ProductsState>(
-              builder: (BuildContext context, ProductsState state) {
-                if (state is ProductsStateLoaded) {
-                  if (state.products.isEmpty) {
-                    // product is loading
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        backgroundColor: Colors.indigo,
-                      ),
-                    );
-                  } else {
-                    logger.d(state.products);
+          body: BlocBuilder<ProductsBloc, ProductsState>(
+            builder: (BuildContext context, ProductsState state) {
+              if (state is ProductsStateLoaded) {
+                if (state.products.isEmpty) {
+                  // product is loading
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.indigo,
+                    ),
+                  );
+                } else {
+                  logger.d(state.products);
 
-                    return ListView.separated(
-                      itemCount: state.products.length,
-                      itemBuilder: (ctx, index) {
-                        final product = state.products[index];
-                        return ProductItem(product: product);
-                      },
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Constants.gap16V,
-                    );
-                  }
+                  return ListView.separated(
+                    itemCount: state.products.length,
+                    itemBuilder: (ctx, index) {
+                      final product = state.products[index];
+                      return ProductItem(product: product);
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Constants.gap16V,
+                  );
                 }
+              }
 
-                return Container();
-              },
-            ),
+              return Container();
+            },
           ),
         );
       },
     );
-  }
-
-  Future<bool> popScope() async {
-    final bloc = context.read<CartBloc>();
-
-    final shouldPop = await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Checkout'),
-        content: const Text(
-            'You will be checked out from this store and all products from cart will be removed!'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('No'),
-          ),
-          FilledButton(
-            onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              prefs.setInt('store_id', 0);
-
-              bloc.add(ClearCartEvent());
-
-              if (!context.mounted) return;
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                Constants.getSnackBar('Checked Out from store!'),
-              );
-
-              Navigator.pop(context, true);
-            },
-            child: const Text('Yes'),
-          )
-        ],
-      ),
-    );
-    return shouldPop!;
   }
 }

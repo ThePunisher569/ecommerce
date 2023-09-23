@@ -17,7 +17,8 @@ class _LoginState extends State<Login> {
   TextEditingController passCtrl = TextEditingController();
 
   void _login() {
-    if (nameCtrl.text == 'admin' && passCtrl.text == 'admin') {
+    if (nameCtrl.text.toLowerCase() == 'admin' &&
+        passCtrl.text.toLowerCase() == 'admin') {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const Home(),
       ));

@@ -6,6 +6,8 @@ import '../../bloc/cart_bloc.dart';
 import '../../model/product.dart';
 import '../../utils/constants.dart';
 
+//TODO add product count widget
+
 class ProductItem extends StatefulWidget {
   const ProductItem({
     super.key,

@@ -1,11 +1,10 @@
-import 'package:ecommerce/bloc/cart_bloc.dart';
-import 'package:ecommerce/bloc/products_bloc.dart';
-import 'package:ecommerce/product_api/local_api.dart';
-import 'package:ecommerce/ui/product/product_list.dart';
 import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../product_api/local_api.dart';
+import 'store_options_screen.dart';
+import 'store_widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -30,28 +29,15 @@ class _HomeState extends State<Home> {
     print('store id is $storeId');
 
     if (storeId != 0 && context.mounted) {
-      navigateToProductList(context);
+      navigateToStore(context);
     }
   }
 
-  void navigateToProductList(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (BuildContext context) => ProductsBloc(),
-            ),
-            BlocProvider(
-              create: (BuildContext context) => CartBloc(),
-            )
-          ],
-          child: ProductList(
-            storeId: storeId,
-          ),
-        ),
-      ),
-    );
+  void navigateToStore(BuildContext context) {
+    if (!context.mounted) return;
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) =>
+            StoreOptionsScreen(store: Constants.storeWidgetList[storeId - 1])));
   }
 
   @override
@@ -69,8 +55,12 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: Constants.appBar('Stores'),
-      body: ListView(
-        children: Constants.storeWidgetList,
+      body: ListView.separated(
+        padding: const EdgeInsets.all(4),
+        itemCount: Constants.storeWidgetList.length,
+        itemBuilder: (context, index) =>
+            StoreWidget(store: Constants.storeWidgetList[index]),
+        separatorBuilder: (BuildContext context, int index) => Constants.gap16V,
       ),
     );
   }

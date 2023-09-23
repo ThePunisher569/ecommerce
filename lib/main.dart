@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'bloc/cart_bloc.dart';
+import 'bloc/products_bloc.dart';
 import 'ui/login/login_screen.dart';
 
 void main() async {
@@ -13,14 +16,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: MaterialApp(
-        title: 'E-Commerce',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-          useMaterial3: true,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (BuildContext context) => ProductsBloc(),
+          ),
+          BlocProvider(
+            create: (BuildContext context) => CartBloc(),
+          )
+        ],
+        child: MaterialApp(
+          title: 'E-Commerce',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+            useMaterial3: true,
+          ),
+          home: const Login(),
         ),
-        home: const Login(),
       ),
     );
   }
