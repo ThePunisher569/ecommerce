@@ -1,51 +1,59 @@
+import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
-
-class PasswordInputField extends StatelessWidget {
-  const PasswordInputField({
+class OTPInputField extends StatelessWidget {
+  const OTPInputField({
     super.key,
-    required this.passCtrl,
+    required this.otpCtrl,
   });
 
-  final TextEditingController passCtrl;
+  final TextEditingController otpCtrl;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: TextField(
-        controller: passCtrl,
+        controller: otpCtrl,
+        keyboardType: TextInputType.number,
         decoration: const InputDecoration(
           prefixIcon: Icon(Icons.password),
           border: OutlineInputBorder(),
-          hintText: 'Enter password : admin',
+          hintText: 'Enter OTP : 1234',
         ),
       ),
     );
   }
 }
 
-class NameInputField extends StatelessWidget {
-  const NameInputField({
+class PhoneInputField extends StatelessWidget {
+  const PhoneInputField({
     super.key,
-    required this.nameCtrl,
+    required this.phoneCtrl,
   });
 
-  final TextEditingController nameCtrl;
+  final TextEditingController phoneCtrl;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
       child: TextField(
-        controller: nameCtrl,
+        controller: phoneCtrl,
+        keyboardType: TextInputType.number,
         autofocus: true,
-        decoration: const InputDecoration(
-          prefixIcon: Icon(Icons.supervised_user_circle),
-          border: OutlineInputBorder(),
-          hintText: 'Enter username : admin',
+        decoration: InputDecoration(
+          prefixIcon: const Icon(Icons.phone_android),
+          suffixIcon: TextButton(
+              onPressed: () {
+                if (phoneCtrl.text.isEmpty) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                    Constants.getSnackBar('OTP sent successfully!'));
+              },
+              child: const Text('Get OTP')),
+          border: const OutlineInputBorder(),
+          hintText: 'Enter phone : 0123456789',
         ),
       ),
     );
@@ -80,9 +88,10 @@ class Logo extends StatelessWidget {
               ),
               TextSpan(
                 text: 'Commerce',
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  color: Colors.indigo,
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .displayMedium
+                    ?.copyWith(color: Colors.indigo),
               )
             ],
           ),

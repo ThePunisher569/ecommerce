@@ -34,7 +34,13 @@ class StoreWidget extends StatelessWidget {
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.indigo.shade700,
-          title: Text(store.storeName),
+          title: Text(
+            store.storeName,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+          ),
           trailing: ElevatedButton(
             onPressed: () => checkIntoStore(context),
             child: const Text('Visit this store'),
@@ -72,9 +78,10 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.all(8),
-        child: Row(
+        width: MediaQuery.sizeOf(context).width,
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CachedNetworkImage(
@@ -90,7 +97,7 @@ class StoreCard extends StatelessWidget {
                   child: Icon(Icons.broken_image,
                       size: 48, color: Colors.white70)),
             ),
-            Constants.gap16H,
+            Constants.gap16V,
             Column(
               children: [
                 Text('Owner Name : ${store.ownerName}'),

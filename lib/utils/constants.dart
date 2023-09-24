@@ -8,7 +8,7 @@ class Constants {
   static const appDesc = 'Ecommerce Store product list and purchase';
 
   static const storeOneImage =
-      'https://media-ik.croma.com/prod/https://media.croma.com/image/upload/v1695191182/Croma%20Assets/CMS/Header/Sept%202023/Croma_Logo_Animation_option2_jnj1bo.gif';
+      'http://pngimagesfree.com/LOGO/R/Reliance-Digital/Reliance-Digital-Logo-PNG-Transparent-image.png';
   static const storeTwoImage =
       'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Ikea_logo.svg/2560px-Ikea_logo.svg.png';
   static const storeThreeImage =
@@ -17,12 +17,12 @@ class Constants {
   static const List<Store> storeWidgetList = [
     Store(
       1,
-      ownerName: 'Croma',
+      ownerName: 'Reliance Digital',
       country: 'India',
       mobile: '3746367',
       city: 'Pune',
       state: 'Maharashtra',
-      storeName: 'Croma',
+      storeName: 'Reliance Digital',
       storeImage: storeOneImage,
     ),
     Store(

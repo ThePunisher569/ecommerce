@@ -12,13 +12,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController nameCtrl = TextEditingController();
+  TextEditingController phoneCtrl = TextEditingController();
 
-  TextEditingController passCtrl = TextEditingController();
+  TextEditingController otpCtrl = TextEditingController();
 
   void _login() {
-    if (nameCtrl.text.toLowerCase() == 'admin' &&
-        passCtrl.text.toLowerCase() == 'admin') {
+    if (phoneCtrl.text.toLowerCase() == '0123456789' &&
+        otpCtrl.text.toLowerCase() == '1234') {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const Home(),
       ));
@@ -47,9 +47,9 @@ class _LoginState extends State<Login> {
               children: [
                 const Logo(),
                 Constants.gap32V,
-                NameInputField(nameCtrl: nameCtrl),
+                PhoneInputField(phoneCtrl: phoneCtrl),
                 Constants.gap16V,
-                PasswordInputField(passCtrl: passCtrl),
+                OTPInputField(otpCtrl: otpCtrl),
                 Constants.gap32V,
                 FilledButton(
                   style: ElevatedButton.styleFrom(
