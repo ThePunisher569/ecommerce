@@ -33,7 +33,7 @@ class StoreWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.3,
       child: GridTile(
         footer: GridTileBar(
-          backgroundColor: Colors.indigo.shade700,
+          backgroundColor: Colors.indigo.shade600,
           title: Text(
             store.storeName,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -47,7 +47,7 @@ class StoreWidget extends StatelessWidget {
           ),
         ),
         child: Card(
-          color: Colors.indigo.shade200,
+          color: Colors.indigo.shade100,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: CachedNetworkImage(
@@ -78,15 +78,14 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.indigo.shade100,
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(16),
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CachedNetworkImage(
-              width: MediaQuery.sizeOf(context).width * 0.5,
-              alignment: Alignment.centerLeft,
               imageUrl: store.storeImage,
               fit: BoxFit.cover,
               filterQuality: FilterQuality.high,
@@ -100,7 +99,10 @@ class StoreCard extends StatelessWidget {
             Constants.gap16V,
             Column(
               children: [
-                Text('Owner Name : ${store.ownerName}'),
+                Text(
+                  'Owner Name : ${store.ownerName}',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 Text('Mobile No. : ${store.mobile}'),
                 Text('City : ${store.city}'),
                 Text('State : ${store.state}'),

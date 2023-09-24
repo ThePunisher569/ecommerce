@@ -1,11 +1,11 @@
-import 'package:ecommerce/bloc/cart_bloc.dart';
-import 'package:ecommerce/ui/store/home.dart';
-import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../bloc/cart_bloc.dart';
+import '../utils/constants.dart';
 import 'product/product_item.dart';
+import 'store/home.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -66,6 +66,7 @@ class _CartState extends State<Cart> {
                             final cartBloc = context.read<CartBloc>();
 
                             cartBloc.add(ClearCartEvent());
+                            cartBloc.add(LoadCartEvent());
                           },
                           child: const Text('Clear Cart'),
                         ),
@@ -79,7 +80,7 @@ class _CartState extends State<Cart> {
                             pref.setInt('store_id', 0);
 
                             if (!context.mounted) return;
-
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             ScaffoldMessenger.of(context).showSnackBar(
                               Constants.getSnackBar('Checked Out from store!'),
                             );
@@ -94,7 +95,7 @@ class _CartState extends State<Cart> {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               );
             }

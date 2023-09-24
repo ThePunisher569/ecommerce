@@ -159,6 +159,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
     prefs.setInt('store_id', 0);
 
     if (!context.mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(
       Constants.getSnackBar('Checked Out from store!'),
     );

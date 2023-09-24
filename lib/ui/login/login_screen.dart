@@ -1,7 +1,7 @@
-import 'package:ecommerce/ui/store/home.dart';
-import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/constants.dart';
+import '../store/home.dart';
 import 'widgets.dart';
 
 class Login extends StatefulWidget {
@@ -23,6 +23,7 @@ class _LoginState extends State<Login> {
         builder: (context) => const Home(),
       ));
     } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context)
           .showSnackBar(Constants.getSnackBar('Invalid Username or Password'));
     }

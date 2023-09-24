@@ -27,6 +27,7 @@ class _ProductItemState extends State<ProductItem> {
     final isAddedToCart =
         (cartBloc.state as CartStateLoaded).products.contains(widget.product);
 
+    logger.d('is this product added to cart? : $isAddedToCart');
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
       child: GridTile(
@@ -40,7 +41,9 @@ class _ProductItemState extends State<ProductItem> {
                       backgroundColor: Colors.redAccent),
                   onPressed: () {
                     cartBloc.add(RemoveFromCartEvent(widget.product));
+                    cartBloc.add(LoadCartEvent());
 
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                         Constants.getSnackBar('Product Removed From Cart!'));
                   },
@@ -50,7 +53,9 @@ class _ProductItemState extends State<ProductItem> {
                   label: const Text('Add To Cart'),
                   onPressed: () {
                     cartBloc.add(AddToCartEvent(widget.product));
+                    cartBloc.add(LoadCartEvent());
 
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                         Constants.getSnackBar('Product Added To Cart!'));
                   },

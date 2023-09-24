@@ -17,16 +17,8 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  late String storeImage;
-
   @override
   void initState() {
-    storeImage = switch (widget.storeId) {
-      1 => Constants.storeOneImage,
-      2 => Constants.storeTwoImage,
-      _ => Constants.storeThreeImage,
-    };
-
     final bloc = context.read<ProductsBloc>();
 
     // Adding event to change product list state
@@ -55,16 +47,12 @@ class _ProductListState extends State<ProductList> {
                 largeSize: 24,
                 label: Text('${cartState.products.length}'),
                 child: IconButton(
-                  onPressed: () async {
-                    final bloc = context.read<CartBloc>();
-
-                    await Navigator.of(context).push(
+                  onPressed: () {
+                    Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const Cart(),
                       ),
                     );
-
-                    bloc.add(LoadCartEvent());
                   },
                   icon: const Icon(Icons.shopping_cart),
                 ),
@@ -75,7 +63,6 @@ class _ProductListState extends State<ProductList> {
             builder: (BuildContext context, ProductsState state) {
               if (state is ProductsStateLoaded) {
                 if (state.products.isEmpty) {
-                  // product is loading
                   return const Center(
                     child: CircularProgressIndicator(
                       backgroundColor: Colors.indigo,

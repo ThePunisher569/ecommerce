@@ -1,6 +1,7 @@
-import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../utils/constants.dart';
 
 class OTPInputField extends StatelessWidget {
   const OTPInputField({
@@ -48,6 +49,7 @@ class PhoneInputField extends StatelessWidget {
           suffixIcon: TextButton(
               onPressed: () {
                 if (phoneCtrl.text.isEmpty) return;
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(
                     Constants.getSnackBar('OTP sent successfully!'));
               },

@@ -52,6 +52,8 @@ class _RemarkWidgetState extends State<RemarkWidget> {
 
                 if (!context.mounted) return;
                 Navigator.of(context).pop();
+
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context)
                     .showSnackBar(Constants.getSnackBar('Remark Added!'));
               }

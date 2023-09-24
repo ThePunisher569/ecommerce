@@ -1,8 +1,8 @@
-import 'package:ecommerce/product_api/local_api.dart';
-import 'package:ecommerce/utils/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../model/product.dart';
+import '../product_api/local_api.dart';
+import '../utils/constants.dart';
 
 // Events
 sealed class CartEvent {}
@@ -22,7 +22,6 @@ class AddToCartEvent extends CartEvent {
 }
 
 class ClearCartEvent extends CartEvent {}
-
 
 // States
 abstract class CartState {}
@@ -51,25 +50,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     ///Triggers state change when AddToCart fired
     on<AddToCartEvent>((event, emit) async {
       await localApi.saveToCart(event.product);
-
-      final cartProducts = await localApi.getAllProductsFromCart();
-      emit(CartStateLoaded(cartProducts));
     });
 
     ///Triggers state change when RemoveFromCart fired
     on<RemoveFromCartEvent>((event, emit) async {
       await localApi.removeFromCart(event.product);
-
-      final cartProducts = await localApi.getAllProductsFromCart();
-      emit(CartStateLoaded(cartProducts));
     });
 
     ///Triggers state change when ClearCart fired
     on<ClearCartEvent>((event, emit) async {
       await localApi.emptyCart();
-
-      final cartProducts = await localApi.getAllProductsFromCart();
-      emit(CartStateLoaded(cartProducts));
     });
   }
 }
