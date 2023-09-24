@@ -31,6 +31,15 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    final cartBloc = context.read<CartBloc>();
+
+    cartBloc.add(LoadCartEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<CartBloc, CartState>(
       builder: (BuildContext context, CartState state) {
@@ -121,6 +130,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
   Future<bool> popScope() async {
     final shouldPop = await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: const Text('Checkout'),
         content: const Text(
