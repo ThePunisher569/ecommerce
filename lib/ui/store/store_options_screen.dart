@@ -28,6 +28,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
       MaterialPageRoute(
         builder: (context) => ProductList(
           storeId: widget.store.storeId,
+          changeCheckoutStatus: changeCheckoutStatus,
         ),
       ),
     );
@@ -77,7 +78,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
 
                     final bool r = await Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const Cart(),
+                        builder: (context) => Cart(changeCheckoutStatus: changeCheckoutStatus),
                       ),
                     );
 

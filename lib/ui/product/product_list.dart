@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/cart_bloc.dart';
 import '../../bloc/products_bloc.dart';
@@ -10,8 +9,8 @@ import 'product_item.dart';
 
 class ProductList extends StatefulWidget {
   final int storeId;
-
-  const ProductList({super.key, required this.storeId});
+  final Function() changeCheckoutStatus;
+  const ProductList({super.key, required this.storeId, required this.changeCheckoutStatus});
 
   @override
   State<ProductList> createState() => _ProductListState();
@@ -57,13 +56,11 @@ class _ProductListState extends State<ProductList> {
                 onPressed: () async {
                   final bool r = await Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const Cart(),
+                      builder: (context) => Cart(changeCheckoutStatus: widget.changeCheckoutStatus,),
                     ),
                   );
                   if (r) {
-                    final prefs = await SharedPreferences.getInstance();
-
-                    prefs.setBool('should_checkout', true);
+                    widget.changeCheckoutStatus();
 
                     if (!context.mounted) return;
                     Navigator.pop(context);
@@ -118,10 +115,7 @@ class _ProductListState extends State<ProductList> {
                                     cartBloc.add(ClearCartEvent());
                                     cartBloc.add(LoadCartEvent());
 
-                                    final prefs =
-                                        await SharedPreferences.getInstance();
-
-                                    prefs.setBool('should_checkout', true);
+                                    widget.changeCheckoutStatus();
 
                                     if (!context.mounted) return;
                                     ScaffoldMessenger.of(context)

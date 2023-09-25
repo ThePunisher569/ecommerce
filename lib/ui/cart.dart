@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/cart_bloc.dart';
 import '../utils/constants.dart';
 import 'product/product_item.dart';
 
 class Cart extends StatefulWidget {
-  const Cart({super.key});
+  final Function() changeCheckoutStatus;
+  const Cart({super.key, required this.changeCheckoutStatus});
 
   @override
   State<Cart> createState() => _CartState();
@@ -78,10 +78,7 @@ class _CartState extends State<Cart> {
                                   cartBloc.add(ClearCartEvent());
                                   cartBloc.add(LoadCartEvent());
 
-                                  final prefs =
-                                      await SharedPreferences.getInstance();
-
-                                  prefs.setBool('should_checkout', true);
+                                  widget.changeCheckoutStatus();
 
                                   if (!context.mounted) return;
                                   ScaffoldMessenger.of(context)
