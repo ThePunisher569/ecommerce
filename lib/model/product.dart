@@ -2,19 +2,21 @@ import 'package:equatable/equatable.dart';
 
 class Product extends Equatable {
   final int? id;
+  int count;
   final String prodImage, prodId, prodName, prodPrice;
 
-  const Product({
+  Product({
     this.id,
     required this.prodImage,
     required this.prodId,
     required this.prodName,
     required this.prodPrice,
+    this.count = 0,
   });
 
   @override
   String toString() {
-    return 'Product{id: $id, prodImage: $prodImage, prodId: $prodId, prodName: $prodName, prodPrice: $prodPrice}';
+    return 'Product{id: $id, count: $count, prodImage: $prodImage, prodId: $prodId, prodName: $prodName, prodPrice: $prodPrice}';
   }
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class Product extends Equatable {
       'prodId': prodId,
       'prodName': prodName,
       'prodPrice': prodPrice,
+      'count': count,
     };
   }
 
@@ -31,8 +34,9 @@ class Product extends Equatable {
         prodImage = map['prodImage'].toString(),
         prodId = map['prodId'].toString(),
         prodName = map['prodName'].toString(),
-        prodPrice = map['prodPrice'].toString();
+        prodPrice = map['prodPrice'].toString(),
+        count = map['count'] ?? 0;
 
   @override
-  List<Object?> get props => [prodId, prodName, prodPrice];
+  List<Object?> get props => [prodId, prodName, prodPrice, prodImage];
 }

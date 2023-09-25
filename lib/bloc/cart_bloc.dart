@@ -23,6 +23,18 @@ class AddToCartEvent extends CartEvent {
 
 class ClearCartEvent extends CartEvent {}
 
+class IncreaseCountEvent extends CartEvent {
+  Product product;
+
+  IncreaseCountEvent(this.product);
+}
+
+class DecreaseCountEvent extends CartEvent {
+  Product product;
+
+  DecreaseCountEvent(this.product);
+}
+
 // States
 abstract class CartState {}
 
@@ -49,6 +61,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     ///Triggers state change when AddToCart fired
     on<AddToCartEvent>((event, emit) async {
+      event.product.count = 1;
       await localApi.saveToCart(event.product);
     });
 
@@ -61,5 +74,31 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<ClearCartEvent>((event, emit) async {
       await localApi.emptyCart();
     });
+
+    on<IncreaseCountEvent>((event, emit) async {
+      event.product.count += 1;
+      await localApi.updateCount(event.product);
+      await localApi.updateProductCount(event.product);
+    });
+
+    on<DecreaseCountEvent>((event, emit) async {
+      if (event.product.count == 1) {
+        event.product.count = 0;
+        await localApi.removeFromCart(event.product);
+      } else {
+        event.product.count -= 1;
+        await localApi.updateCount(event.product);
+      }
+
+      await localApi.updateProductCount(event.product);
+    });
+  }
+
+  @override
+  void onTransition(Transition<CartEvent, CartState> transition) {
+    super.onTransition(transition);
+
+    print('Cart state transition occurred');
+    logger.d((transition.nextState as CartStateLoaded).products);
   }
 }

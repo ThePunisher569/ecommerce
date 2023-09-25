@@ -67,6 +67,15 @@ class LocalApi extends ProductRepo {
     return Product.fromMap(product[0]);
   }
 
+  Future<void> updateProductCount(Product product) async {
+    await database.update(
+      DbConstants.productTable,
+      product.toMap(),
+      where: 'prodId = ?',
+      whereArgs: [product.prodId],
+    );
+  }
+
   // Cart table methods
 
   Future<List<Product>> getAllProductsFromCart() async {
@@ -99,6 +108,16 @@ class LocalApi extends ProductRepo {
       whereArgs: [product.prodId],
     );
     print('Product Removed from cart....');
+  }
+
+  Future<void> updateCount(Product product) async {
+    print('Updating count in cart');
+    await database.update(
+      DbConstants.cartTable,
+      product.toMap(),
+      where: 'prodId = ?',
+      whereArgs: [product.prodId],
+    );
   }
 
   Future<void> emptyCart() async {

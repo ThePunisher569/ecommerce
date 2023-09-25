@@ -112,11 +112,17 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
                       height: 96,
                     ),
                     FilledButton(
-                        style: FilledButton.styleFrom(
-                            minimumSize:
-                                Size(MediaQuery.sizeOf(context).width, 54)),
-                        onPressed: checkout,
-                        child: const Text('Checkout')),
+                      style: FilledButton.styleFrom(
+                          minimumSize:
+                              Size(MediaQuery.sizeOf(context).width, 54)),
+                      onPressed: () async {
+                        bool shouldPop = await popScope();
+                        if (shouldPop && context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text('Checkout'),
+                    ),
                   ],
                 ),
               ),
@@ -154,6 +160,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
   void checkout() async {
     final bloc = context.read<CartBloc>();
     bloc.add(ClearCartEvent());
+    bloc.add(LoadCartEvent());
 
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt('store_id', 0);

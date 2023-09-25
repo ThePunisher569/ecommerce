@@ -17,7 +17,8 @@ class DbConstants {
       $prodImage TEXT, 
       $prodId TEXT, 
       $prodName TEXT, 
-      $prodPrice TEXT
+      $prodPrice TEXT,
+      count INTEGER
       )''';
 
   static const String createCartQuery = '''CREATE TABLE $cartTable(
@@ -25,7 +26,8 @@ class DbConstants {
       $prodImage TEXT, 
       $prodId TEXT, 
       $prodName TEXT, 
-      $prodPrice TEXT
+      $prodPrice TEXT,
+      count INTEGER
       )''';
 
   static const String createRemarkQuery = '''CREATE TABLE $remarksTable(

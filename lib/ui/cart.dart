@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/cart_bloc.dart';
 import '../utils/constants.dart';
@@ -42,6 +41,11 @@ class _CartState extends State<Cart> {
             } else {
               logger.d(state.products);
 
+              double totalPrice = state.products
+                  .map((product) =>
+                      double.parse(product.prodPrice) * product.count)
+                  .reduce((value, element) => value + element);
+
               return Column(
                 children: [
                   Expanded(
@@ -61,37 +65,31 @@ class _CartState extends State<Cart> {
                       alignment: MainAxisAlignment.spaceEvenly,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        TextButton(
-                          onPressed: () {
-                            final cartBloc = context.read<CartBloc>();
-
-                            cartBloc.add(ClearCartEvent());
-                            cartBloc.add(LoadCartEvent());
-                          },
-                          child: const Text('Clear Cart'),
+                        Text(
+                          'Total Price: $totalPrice Rs',
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         FilledButton(
                           onPressed: () async {
                             final cartBloc = context.read<CartBloc>();
 
                             cartBloc.add(ClearCartEvent());
-
-                            final pref = await SharedPreferences.getInstance();
-                            pref.setInt('store_id', 0);
+                            cartBloc.add(LoadCartEvent());
 
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                             ScaffoldMessenger.of(context).showSnackBar(
-                              Constants.getSnackBar('Checked Out from store!'),
-                            );
+                                Constants.getSnackBar(
+                                    'Order Placed Successfully!'));
 
                             Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                ModalRoute.withName("/Home"));
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Home()),
+                              ModalRoute.withName("/Home"),
+                            );
                           },
-                          child: const Text('Checkout'),
+                          child: const Text('Proceed to Purchase'),
                         ),
                       ],
                     ),

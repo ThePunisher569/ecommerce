@@ -11,6 +11,12 @@ sealed class ProductsEvent {}
 
 class LoadProductsEvent extends ProductsEvent {}
 
+class UpdateProductCountEvent extends ProductsEvent {
+  Product product;
+
+  UpdateProductCountEvent(this.product);
+}
+
 // States
 abstract class ProductsState {}
 
@@ -29,7 +35,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc() : super(ProductsStateLoaded([])) {
     ///Triggers state change when LoadProductsEvent fired
     on<LoadProductsEvent>((event, emit) async {
-      final localProducts = await localApi.getAllProducts();
+      List<Product> localProducts = await localApi.getAllProducts();
 
       if (localProducts.isEmpty) {
         debugPrint('loading products from API');
@@ -46,6 +52,10 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         logger.i('loading products from cache');
         emit(ProductsStateLoaded(localProducts));
       }
+    });
+
+    on<UpdateProductCountEvent>((event, emit) async {
+      await localApi.updateProductCount(event.product);
     });
   }
 }
