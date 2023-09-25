@@ -51,7 +51,7 @@ class _RemarkWidgetState extends State<RemarkWidget> {
                 await LocalApi().saveRemark(inputText);
 
                 if (!context.mounted) return;
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
 
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context)

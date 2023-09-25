@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../bloc/cart_bloc.dart';
 import '../../bloc/products_bloc.dart';
 import '../../utils/constants.dart';
 import '../cart.dart';
-import '../store/home.dart';
 import 'product_item.dart';
 
 class ProductList extends StatefulWidget {
@@ -54,12 +54,20 @@ class _ProductListState extends State<ProductList> {
               largeSize: 24,
               label: Text('${(state).products.length}'),
               child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(
+                onPressed: () async {
+                  final bool r = await Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => const Cart(),
                     ),
                   );
+                  if (r) {
+                    final prefs = await SharedPreferences.getInstance();
+
+                    prefs.setBool('should_checkout', true);
+
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
+                  }
                 },
                 icon: const Icon(Icons.shopping_cart),
               ),
@@ -102,26 +110,28 @@ class _ProductListState extends State<ProductList> {
                             style: Theme.of(context).textTheme.labelLarge,
                           ),
                           FilledButton(
-                            onPressed: () async {
-                              final cartBloc = context.read<CartBloc>();
+                            onPressed: cartState.products.isEmpty
+                                ? null
+                                : () async {
+                                    final cartBloc = context.read<CartBloc>();
 
-                              cartBloc.add(ClearCartEvent());
-                              cartBloc.add(LoadCartEvent());
+                                    cartBloc.add(ClearCartEvent());
+                                    cartBloc.add(LoadCartEvent());
 
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context)
-                                  .hideCurrentSnackBar();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  Constants.getSnackBar(
-                                      'Orders Placed Successfully!'));
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
 
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const Home()),
-                                ModalRoute.withName("/Home"),
-                              );
-                            },
+                                    prefs.setBool('should_checkout', true);
+
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        Constants.getSnackBar(
+                                            'Orders Placed Successfully!'));
+
+                                    Navigator.pop(context, true);
+                                  },
                             child: const Text('Proceed to Purchase'),
                           ),
                         ],

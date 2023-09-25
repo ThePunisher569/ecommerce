@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../bloc/cart_bloc.dart';
 import '../utils/constants.dart';
 import 'product/product_item.dart';
-import 'store/home.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -70,25 +70,28 @@ class _CartState extends State<Cart> {
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         FilledButton(
-                          onPressed: () async {
-                            final cartBloc = context.read<CartBloc>();
+                          onPressed: state.products.isEmpty
+                              ? null
+                              : () async {
+                                  final cartBloc = context.read<CartBloc>();
 
-                            cartBloc.add(ClearCartEvent());
-                            cartBloc.add(LoadCartEvent());
+                                  cartBloc.add(ClearCartEvent());
+                                  cartBloc.add(LoadCartEvent());
 
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                Constants.getSnackBar(
-                                    'Order Placed Successfully!'));
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
 
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Home()),
-                              ModalRoute.withName("/Home"),
-                            );
-                          },
+                                  prefs.setBool('should_checkout', true);
+
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      Constants.getSnackBar(
+                                          'Order Placed Successfully!'));
+
+                                  Navigator.pop(context, true);
+                                },
                           child: const Text('Proceed to Purchase'),
                         ),
                       ],

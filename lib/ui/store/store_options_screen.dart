@@ -20,14 +20,29 @@ class StoreOptionsScreen extends StatefulWidget {
 }
 
 class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
-  void navigateToProductList(BuildContext context) {
-    Navigator.of(context).push(
+  bool shouldCheckout = false;
+
+  void navigateToProductList(BuildContext context) async {
+    if (!context.mounted) return;
+    final bool r = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ProductList(
           storeId: widget.store.storeId,
         ),
       ),
     );
+
+    if (r) {
+      changeCheckoutStatus();
+    }
+  }
+
+  void changeCheckoutStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() => shouldCheckout = true);
+
+    prefs.setBool('should_checkout', shouldCheckout);
   }
 
   @override
@@ -60,12 +75,15 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
                   onPressed: () async {
                     final bloc = context.read<CartBloc>();
 
-                    await Navigator.of(context).push(
+                    final bool r = await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => const Cart(),
                       ),
                     );
 
+                    if (r) {
+                      changeCheckoutStatus();
+                    }
                     bloc.add(LoadCartEvent());
                   },
                   icon: const Icon(Icons.shopping_cart),
@@ -101,12 +119,16 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
                       tileColor: Colors.red.shade200,
                       title: const Text('No Order'),
                       trailing: const Icon(Icons.arrow_forward_ios),
-                      onTap: () async => await showModalBottomSheet(
-                        context: context,
-                        builder: (context) => RemarkWidget(
-                          storeId: widget.store.storeId,
-                        ),
-                      ),
+                      onTap: () async {
+                        final result = await showModalBottomSheet(
+                          context: context,
+                          builder: (context) =>
+                              RemarkWidget(storeId: widget.store.storeId),
+                        );
+                        if (result) {
+                          changeCheckoutStatus();
+                        }
+                      },
                     ),
                     const SizedBox(
                       height: 96,
@@ -115,12 +137,14 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
                       style: FilledButton.styleFrom(
                           minimumSize:
                               Size(MediaQuery.sizeOf(context).width, 54)),
-                      onPressed: () async {
-                        bool shouldPop = await popScope();
-                        if (shouldPop && context.mounted) {
-                          Navigator.pop(context);
-                        }
-                      },
+                      onPressed: cartState.products.isNotEmpty || shouldCheckout
+                          ? () async {
+                              bool shouldPop = await popScope();
+                              if (shouldPop && context.mounted) {
+                                Navigator.pop(context);
+                              }
+                            }
+                          : null,
                       child: const Text('Checkout'),
                     ),
                   ],
