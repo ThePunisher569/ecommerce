@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../utils/constants.dart';
-
 class OTPInputField extends StatelessWidget {
   const OTPInputField({
     super.key,
@@ -15,12 +13,14 @@ class OTPInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      child: TextField(
+      child: TextFormField(
         controller: otpCtrl,
         keyboardType: TextInputType.number,
+        maxLength: 4,
         decoration: const InputDecoration(
           prefixIcon: Icon(Icons.password),
           border: OutlineInputBorder(),
+          counterText: '',
           hintText: 'Enter OTP : 1234',
         ),
       ),
@@ -40,23 +40,23 @@ class PhoneInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-      child: TextField(
+      child: TextFormField(
         controller: phoneCtrl,
-        keyboardType: TextInputType.number,
+        keyboardType: TextInputType.phone,
         autofocus: true,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.phone_android),
-          suffixIcon: TextButton(
-              onPressed: () {
-                if (phoneCtrl.text.isEmpty) return;
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(
-                    Constants.getSnackBar('OTP sent successfully!'));
-              },
-              child: const Text('Get OTP')),
-          border: const OutlineInputBorder(),
-          hintText: 'Enter phone : 0123456789',
+        maxLength: 10,
+        decoration: const InputDecoration(
+          prefixIcon: Icon(Icons.phone_android),
+          border: OutlineInputBorder(),
+          counterText: '',
+          hintText: 'Enter mobile no : 0123456789',
         ),
+        validator: (value) {
+          if (value == null || value.isEmpty || value.length != 10) {
+            return 'Enter a valid 10-digit mobile number';
+          }
+          return null;
+        },
       ),
     );
   }
@@ -77,6 +77,7 @@ class Logo extends StatelessWidget {
           'assets/images/logo.svg',
           width: 64,
           height: 80,
+          placeholderBuilder: (context) => const CircularProgressIndicator(),
         ),
         RichText(
           text: TextSpan(

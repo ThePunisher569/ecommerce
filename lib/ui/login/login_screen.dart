@@ -16,12 +16,24 @@ class _LoginState extends State<Login> {
 
   TextEditingController otpCtrl = TextEditingController();
 
+  final GlobalKey<FormState> _formKey = GlobalKey();
+
   void _login() {
-    if (phoneCtrl.text.toLowerCase() == '0123456789' &&
-        otpCtrl.text.toLowerCase() == '1234') {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const Home(),
-      ));
+    if (_formKey.currentState!.validate()) {
+      if (phoneCtrl.text.toLowerCase() == '0123456789' &&
+          otpCtrl.text.toLowerCase() == '1234') {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const Home(),
+        ));
+
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(Constants.getSnackBar('Logged In Successfully!'));
+      } else {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(Constants.getSnackBar(
+            'Type phone number = 0123456789 and OTP = 1234'));
+      }
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context)
@@ -35,32 +47,30 @@ class _LoginState extends State<Login> {
       resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.sizeOf(context).width * 0.04,
-          vertical: MediaQuery.sizeOf(context).height * 0.04,
+        padding: EdgeInsets.only(
+          left: 16,
+          right: 16,
+          top: MediaQuery.sizeOf(context).height * 0.14,
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
         ),
-        child: Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.viewInsetsOf(context).bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const Logo(),
-                Constants.gap32V,
-                PhoneInputField(phoneCtrl: phoneCtrl),
-                Constants.gap16V,
-                OTPInputField(otpCtrl: otpCtrl),
-                Constants.gap32V,
-                FilledButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(54),
-                  ),
-                  onPressed: _login,
-                  child: const Text('Login'),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const Logo(),
+              Constants.gap32V,
+              PhoneInputField(phoneCtrl: phoneCtrl),
+              Constants.gap16V,
+              OTPInputField(otpCtrl: otpCtrl),
+              Constants.gap32V,
+              FilledButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(54),
                 ),
-              ],
-            ),
+                onPressed: _login,
+                child: const Text('Login'),
+              ),
+            ],
           ),
         ),
       ),
