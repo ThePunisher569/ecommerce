@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../model/store.dart';
 
 class Constants {
-  static const url = 'https://www.jsonkeeper.com/b/YIDG';
+  static const url = 'https://www.jsonkeeper.com/b/MLTL';
   static const appName = 'E-Commerce';
   static const appDesc = 'Ecommerce Store product list and purchase';
 
