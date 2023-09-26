@@ -7,6 +7,7 @@ import '../../model/store.dart';
 import '../../utils/constants.dart';
 import 'store_options_screen.dart';
 
+/// View for Store model instances
 class StoreWidget extends StatelessWidget {
   final Store store;
 

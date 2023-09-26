@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 
+/// This model is used serializing db data to runtime instances.
+/// The DB will provide the data and uses Product.fromMap method to serialize.
+/// To post the data in DB toMap method is used to create or update db table.
 class Product extends Equatable {
   final int? id;
   int count;

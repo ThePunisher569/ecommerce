@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../model/store.dart';
 
+/// This contains all the compile time constants that are required
+/// throughout the app
 class Constants {
+
+  /// The URL of API used in app
   static const url = 'https://www.jsonkeeper.com/b/MLTL';
   static const appName = 'E-Commerce';
   static const appDesc = 'Ecommerce Store product list and purchase';
@@ -15,6 +19,7 @@ class Constants {
   static const storeThreeImage =
       'https://images.carriercms.com/image/upload/h_150,q_100,f_auto/v1573562016/common/logos/carrier-corp-logo.png';
 
+  /// This is used to create listView in home.dart
   static const List<Store> storeWidgetList = [
     Store(
       1,

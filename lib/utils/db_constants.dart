@@ -12,6 +12,8 @@ class DbConstants {
   static const String prodPrice = 'prodPrice';
 
   // Queries
+
+  /// To create the product table
   static const String createProductQuery = '''CREATE TABLE $productTable(
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       $prodImage TEXT, 
@@ -21,6 +23,7 @@ class DbConstants {
       count INTEGER
       )''';
 
+  /// To create the cart table
   static const String createCartQuery = '''CREATE TABLE $cartTable(
       id INTEGER PRIMARY KEY autoincrement, 
       $prodImage TEXT, 
@@ -30,8 +33,10 @@ class DbConstants {
       count INTEGER
       )''';
 
+  /// To create the remarks table
   static const String createRemarkQuery = '''CREATE TABLE $remarksTable(
       id INTEGER PRIMARY KEY autoincrement, remark TEXT)''';
 
+  /// To truncate cart table
   static const String emptyCartQuery = 'DELETE FROM $cartTable';
 }

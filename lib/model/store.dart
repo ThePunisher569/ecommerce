@@ -1,3 +1,4 @@
+/// Store model instance
 class Store {
   final int storeId;
   final String storeName, ownerName, country, mobile, city, state, storeImage;

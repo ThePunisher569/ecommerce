@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+/// OTP TextField
 class OTPInputField extends StatelessWidget {
   const OTPInputField({
     super.key,
@@ -28,6 +29,7 @@ class OTPInputField extends StatelessWidget {
   }
 }
 
+/// Mobile number TextField
 class PhoneInputField extends StatelessWidget {
   const PhoneInputField({
     super.key,
@@ -62,6 +64,7 @@ class PhoneInputField extends StatelessWidget {
   }
 }
 
+/// LOGO of the App
 class Logo extends StatelessWidget {
   const Logo({
     super.key,

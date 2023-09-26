@@ -4,6 +4,7 @@ import '../../utils/constants.dart';
 import '../store/home.dart';
 import 'widgets.dart';
 
+/// Login screen
 class Login extends StatefulWidget {
   const Login({super.key});
 

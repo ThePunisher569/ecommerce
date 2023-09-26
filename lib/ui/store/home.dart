@@ -6,6 +6,9 @@ import '../../product_api/local_api.dart';
 import 'store_options_screen.dart';
 import 'store_widget.dart';
 
+
+/// This screen will redirect the user based on store check in status,
+/// received from shared prefs [storeId]
 class Home extends StatefulWidget {
   const Home({super.key});
 

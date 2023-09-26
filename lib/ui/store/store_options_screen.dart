@@ -10,6 +10,8 @@ import '../product/product_list.dart';
 import '../remark_widget.dart';
 import 'store_widget.dart';
 
+/// This screen is the home for the store. It will contain
+/// Store details, Take order, No order and Checkout options
 class StoreOptionsScreen extends StatefulWidget {
   final Store store;
 

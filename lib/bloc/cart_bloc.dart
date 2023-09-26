@@ -23,12 +23,15 @@ class AddToCartEvent extends CartEvent {
 
 class ClearCartEvent extends CartEvent {}
 
+/// Increases count of that product in cart table as well as product table
 class IncreaseCountEvent extends CartEvent {
   Product product;
 
   IncreaseCountEvent(this.product);
 }
 
+/// Decreases count of that product in cart table as well as product table.
+/// If count of the product is 1, it will remove it from cart
 class DecreaseCountEvent extends CartEvent {
   Product product;
 
@@ -46,11 +49,14 @@ class CartStateLoaded extends CartState {
 
 // Cart Bloc
 
+/// This bloc of [CartState] type responsible for managing the
+/// list of products state in [cart.dart].
+/// If local product table is empty, it will populate the table
+/// using Products fetched from API by triggering [LoadCartEvent].
 class CartBloc extends Bloc<CartEvent, CartState> {
   LocalApi localApi = LocalApi();
 
   CartBloc() : super(CartStateLoaded([])) {
-    ///Triggers state change when LoadCartEvent fired
     on<LoadCartEvent>((event, emit) async {
       final cartProducts = await localApi.getAllProductsFromCart();
 
@@ -59,18 +65,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit(CartStateLoaded(cartProducts));
     });
 
-    ///Triggers state change when AddToCart fired
     on<AddToCartEvent>((event, emit) async {
       event.product.count = 1;
       await localApi.saveToCart(event.product);
     });
 
-    ///Triggers state change when RemoveFromCart fired
     on<RemoveFromCartEvent>((event, emit) async {
       await localApi.removeFromCart(event.product);
     });
 
-    ///Triggers state change when ClearCart fired
     on<ClearCartEvent>((event, emit) async {
       await localApi.emptyCart();
     });

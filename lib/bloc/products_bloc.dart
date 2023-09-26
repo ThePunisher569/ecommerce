@@ -18,6 +18,8 @@ class UpdateProductCountEvent extends ProductsEvent {
 }
 
 // States
+
+/// State for managing list of product instances
 abstract class ProductsState {}
 
 class ProductsStateLoaded extends ProductsState {
@@ -28,6 +30,10 @@ class ProductsStateLoaded extends ProductsState {
 
 // Product Bloc
 
+/// This bloc of [ProductState] type responsible for managing the
+/// list of products state in [product_list.dart].
+/// If local product table is empty, it will populate the table
+/// using Products fetched from API by triggering [LoadProductsEvent].
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   RemoteApi remoteApi = RemoteApi();
   LocalApi localApi = LocalApi();

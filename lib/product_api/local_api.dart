@@ -5,11 +5,15 @@ import '../model/product.dart';
 import '../utils/db_constants.dart';
 import 'product_repo.dart';
 
-/// This class will deal with local db using sqlite queries
+/// This class will deal with local db using sqlite queries following singleton
+/// pattern.
 class LocalApi extends ProductRepo {
   LocalApi._();
 
+  /// Single instance of this class
   static LocalApi? _instance;
+
+  /// Single instance of database
   late Database database;
 
   factory LocalApi() {
@@ -19,6 +23,7 @@ class LocalApi extends ProductRepo {
 
   // Products table methods
 
+  /// Initialize DB and create tables if not created.
   Future<void> initDatabase() async {
     String path = join(await getDatabasesPath(), DbConstants.dbName);
 
@@ -35,6 +40,7 @@ class LocalApi extends ProductRepo {
     );
   }
 
+  /// close this connection
   Future close() async => await database.close();
 
   @override
@@ -44,12 +50,14 @@ class LocalApi extends ProductRepo {
     return productList.map((e) => Product.fromMap(e)).toList();
   }
 
+  /// Inserts a single product in product DB table
   Future<void> saveProduct(Product product) async {
     print('saving product ${product.toString()}');
     await database.insert(DbConstants.productTable, product.toMap());
     print('Product saved successfully!');
   }
 
+  /// Inserts all products in product DB table
   Future<void> saveAllProducts(List<Product> products) async {
     print('Saving products....');
     for (final p in products) {
@@ -58,6 +66,7 @@ class LocalApi extends ProductRepo {
     print('Product saved successfully!');
   }
 
+  /// Return Product instance that matches prodID in DB
   Future<Product> getProduct(String prodId) async {
     final product = await database.query(
       DbConstants.productTable,
@@ -67,6 +76,7 @@ class LocalApi extends ProductRepo {
     return Product.fromMap(product[0]);
   }
 
+  /// Update the product count field in product db table.
   Future<void> updateProductCount(Product product) async {
     await database.update(
       DbConstants.productTable,
@@ -78,12 +88,14 @@ class LocalApi extends ProductRepo {
 
   // Cart table methods
 
+  /// Return all products that are present in cart
   Future<List<Product>> getAllProductsFromCart() async {
     final cartProducts = await database.query(DbConstants.cartTable);
 
     return cartProducts.map((e) => Product.fromMap(e)).toList();
   }
 
+  /// Return a single product based on prodId that are present in cart
   Future<Product> getProductFromCart(String prodId) async {
     final product = await database.query(
       DbConstants.cartTable,
@@ -93,6 +105,7 @@ class LocalApi extends ProductRepo {
     return Product.fromMap(product[0]);
   }
 
+  /// Inserts the product to cart following ID and prodId.
   Future<void> saveToCart(Product product) async {
     print('Adding product to cart....');
     await database.insert(
@@ -100,6 +113,7 @@ class LocalApi extends ProductRepo {
     print('Product added successfully!');
   }
 
+  /// Removes product from cart based on prodId
   Future<void> removeFromCart(Product product) async {
     print('Deleting product from cart....');
     await database.delete(
@@ -110,6 +124,7 @@ class LocalApi extends ProductRepo {
     print('Product Removed from cart....');
   }
 
+  /// Update the product count field in cart db table.
   Future<void> updateCount(Product product) async {
     print('Updating count in cart');
     await database.update(
@@ -120,6 +135,7 @@ class LocalApi extends ProductRepo {
     );
   }
 
+  /// Truncate the cart
   Future<void> emptyCart() async {
     print('Truncating cart....');
     await database.execute(DbConstants.emptyCartQuery);
@@ -128,6 +144,7 @@ class LocalApi extends ProductRepo {
 
   // Remark methods
 
+  /// Inserts a remark into remarks table
   Future<void> saveRemark(String remark) async {
     print('Adding remark: $remark');
 
@@ -137,6 +154,7 @@ class LocalApi extends ProductRepo {
     print('remark added!');
   }
 
+  /// Returns all remarks from remarks table
   Future<List<Map<String, dynamic>>> getRemarks() async {
     final remarks = await database.query(DbConstants.remarksTable);
 

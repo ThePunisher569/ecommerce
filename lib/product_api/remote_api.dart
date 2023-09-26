@@ -6,6 +6,8 @@ import '../model/product.dart';
 import '../utils/constants.dart';
 import 'product_repo.dart';
 
+/// This class will deal with remote URL and it will parse json string
+/// into serialized Product.
 class RemoteApi extends ProductRepo {
   RemoteApi._();
 
@@ -16,6 +18,7 @@ class RemoteApi extends ProductRepo {
     return _instance!;
   }
 
+  /// Fetch products from API and save into Local DB product table
   @override
   Future<List<Product>> getAllProducts() async {
     logger.i('Fetching Product data');
