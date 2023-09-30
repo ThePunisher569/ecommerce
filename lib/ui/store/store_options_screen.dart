@@ -66,10 +66,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            title: Text(
-              widget.store.storeName,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            title: Text(widget.store.storeName),
             actions: [
               Badge(
                 largeSize: 24,
@@ -78,11 +75,11 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
                   onPressed: () async {
                     final bloc = context.read<CartBloc>();
 
-                    final bool r = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => Cart(changeCheckoutStatus: changeCheckoutStatus),
-                      ),
-                    );
+                    final bool r =
+                        await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          Cart(changeCheckoutStatus: changeCheckoutStatus),
+                    ));
 
                     if (r) {
                       changeCheckoutStatus();
@@ -133,9 +130,7 @@ class _StoreOptionsScreenState extends State<StoreOptionsScreen> {
                         }
                       },
                     ),
-                    const SizedBox(
-                      height: 96,
-                    ),
+                    Constants.gap64V,
                     FilledButton(
                       style: FilledButton.styleFrom(
                           minimumSize:

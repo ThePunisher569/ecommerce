@@ -46,23 +46,33 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Container(
-        alignment: Alignment.center,
-        height: MediaQuery.sizeOf(context).height,
+      appBar: PreferredSize(
+        preferredSize:
+            Size.fromHeight(MediaQuery.sizeOf(context).height * 0.14),
+        child: const Padding(
+          padding: EdgeInsets.only(top: 32.0),
+          child: Logo(),
+        ),
+      ),
+      body: SingleChildScrollView(
         padding: EdgeInsets.only(
           left: 16,
           right: 16,
-          top: MediaQuery.sizeOf(context).height * 0.08,
+          top: 48,
           bottom: MediaQuery.viewInsetsOf(context).bottom,
         ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              const Logo(),
-              Constants.gap64V,
-              Flexible(
-                child: Text(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Container(
+          padding: const EdgeInsets.only(left: 16, right: 16, top: 32,bottom: 32),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primaryContainer,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Text(
                   'Login with Mobile Number',
                   style: Theme.of(context)
                       .textTheme
@@ -70,20 +80,19 @@ class _LoginState extends State<Login> {
                       ?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.start,
                 ),
-              ),
-              Constants.gap16V,
-              PhoneInputField(phoneCtrl: phoneCtrl),
-              Constants.gap8V,
-              OTPInputField(otpCtrl: otpCtrl),
-              Constants.gap32V,
-              FilledButton(
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(54),
+                Constants.gap32V,
+                PhoneInputField(phoneCtrl: phoneCtrl),
+                OTPInputField(otpCtrl: otpCtrl),
+                Constants.gap32V,
+                FilledButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(54),
+                  ),
+                  onPressed: _login,
+                  child: const Text('Login'),
                 ),
-                onPressed: _login,
-                child: const Text('Login'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -33,24 +33,38 @@ class StoreWidget extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
       child: GridTile(
-        footer: GridTileBar(
-          backgroundColor: Colors.indigo.shade600,
-          title: Text(
-            store.storeName,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+        footer: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(16),
+              bottomRight: Radius.circular(16),
+            ),
+            child: GridTileBar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              title: Text(
+                store.storeName,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+              ),
+              trailing: Padding(
+                padding: const EdgeInsets.only(right: 4.0),
+                child: ElevatedButton(
+                  onPressed: () => checkIntoStore(context),
+                  child: const Text('Visit this Store'),
                 ),
-          ),
-          trailing: ElevatedButton(
-            onPressed: () => checkIntoStore(context),
-            child: const Text('Visit this store'),
+              ),
+            ),
           ),
         ),
         child: Card(
-          color: Colors.indigo.shade100,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          color: Theme.of(context).colorScheme.primaryContainer,
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: CachedNetworkImage(
             imageUrl: store.storeImage,
             alignment: Alignment.center,
@@ -79,7 +93,9 @@ class StoreCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.indigo.shade100,
+      color: Theme.of(context).colorScheme.primaryContainer,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         padding: const EdgeInsets.all(16),
         width: MediaQuery.sizeOf(context).width,
@@ -101,13 +117,21 @@ class StoreCard extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  'Owner Name : ${store.ownerName}',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  'Owner Name: ${store.ownerName}',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                Text('Mobile No. : ${store.mobile}'),
-                Text('City : ${store.city}'),
-                Text('State : ${store.state}'),
-                Text('Country : ${store.country}'),
+                Constants.gap8V,
+                Text(
+                  'Mobile Number: ${store.mobile}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Constants.gap8V,
+                Text(
+                  'Location: ${store.city}, ${store.state}, ${store.country}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             )
           ],
