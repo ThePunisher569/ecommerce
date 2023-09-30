@@ -1,4 +1,4 @@
-# E-Commerce Application
+## E-Commerce Application
 
 A simple app to demonstrate the idea behind the working of an ecommerce app.
 
