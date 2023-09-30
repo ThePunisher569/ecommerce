@@ -76,30 +76,35 @@ class Logo extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          'assets/images/logo.svg',
-          width: 64,
-          height: 80,
-          placeholderBuilder: (context) => const CircularProgressIndicator(),
+        Flexible(
+          child: SvgPicture.asset(
+            'assets/images/logo.svg',
+            width: 64,
+            height: 80,
+            placeholderBuilder: (context) => const CircularProgressIndicator(),
+          ),
         ),
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: '\t-\t',
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(color: Colors.indigo),
-              ),
-              TextSpan(
-                text: 'Commerce',
-                style: Theme.of(context)
-                    .textTheme
-                    .displayMedium
-                    ?.copyWith(color: Colors.indigo),
-              )
-            ],
+        Flexible(
+          flex: 4,
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: '\t-\t',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge
+                      ?.copyWith(color: Colors.indigo),
+                ),
+                TextSpan(
+                  text: 'Commerce',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayMedium
+                      ?.copyWith(color: Colors.indigo),
+                )
+              ],
+            ),
           ),
         ),
       ],

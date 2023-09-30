@@ -48,10 +48,11 @@ class _LoginState extends State<Login> {
       resizeToAvoidBottomInset: false,
       body: Container(
         alignment: Alignment.center,
+        height: MediaQuery.sizeOf(context).height,
         padding: EdgeInsets.only(
           left: 16,
           right: 16,
-          top: MediaQuery.sizeOf(context).height * 0.14,
+          top: MediaQuery.sizeOf(context).height * 0.08,
           bottom: MediaQuery.viewInsetsOf(context).bottom,
         ),
         child: Form(
@@ -59,9 +60,20 @@ class _LoginState extends State<Login> {
           child: Column(
             children: [
               const Logo(),
-              Constants.gap32V,
-              PhoneInputField(phoneCtrl: phoneCtrl),
+              Constants.gap64V,
+              Flexible(
+                child: Text(
+                  'Login with Mobile Number',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
+                ),
+              ),
               Constants.gap16V,
+              PhoneInputField(phoneCtrl: phoneCtrl),
+              Constants.gap8V,
               OTPInputField(otpCtrl: otpCtrl),
               Constants.gap32V,
               FilledButton(

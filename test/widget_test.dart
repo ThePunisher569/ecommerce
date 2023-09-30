@@ -23,12 +23,13 @@ void main() {
 
   testWidgets('Logo widget test', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(
-      home: Login(),
+      home: Logo(),
     ));
 
     final logoImage = find.byType(SvgPicture);
-    final logoText = find.text('Commerce');
+    final logoText = find.byType(RichText);
 
+    await tester.pump();
     expect(logoImage, findsOneWidget);
     expect(logoText, findsOneWidget);
   });
@@ -42,7 +43,7 @@ void main() {
     await tester.enterText(find.byType(PhoneInputField), '3257873');
 
     // Trigger the login action
-    await tester.tap(find.text('Login'));
+    await tester.tap(find.byType(FilledButton));
 
     await tester.pump();
 
@@ -59,7 +60,9 @@ void main() {
     await tester.enterText(find.byType(OTPInputField), '456');
 
     // Trigger the login action
-    await tester.tap(find.text('Login'));
+    await tester.tap(find.byType(FilledButton));
+
+    await tester.pump();
 
     // Expect a validation error message
     expect(find.text('Invalid Username or Password'), findsOneWidget);

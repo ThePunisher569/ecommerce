@@ -53,8 +53,10 @@ class Constants {
     )
   ];
 
+  static const SizedBox gap8V = SizedBox(height: 8);
   static const SizedBox gap16V = SizedBox(height: 16);
   static const SizedBox gap32V = SizedBox(height: 32);
+  static const SizedBox gap64V = SizedBox(height: 64);
 
   static const SizedBox gap16H = SizedBox(width: 16);
 
